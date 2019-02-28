@@ -64,9 +64,16 @@ keys.addEventListener('click', e => {
 
 		}
 		if (action === 'calculate') {
+			let firstValue = calculator.dataset.firstValue
+			let secondValue = displayedNum
 			if (firstValue) {
+				if (previousKeyType === 'calculate') {
+					firstValue = displayedNum
+					secondValue = calculator.dataset.modValue
+				}
 				display.textContent = calculate(firstValue, operator, secondValue)
 			}
+			calculator.dataset.modValue = secondValue
 			calculator.dataset.previousKeyType = 'calculate'
 		}
 	}
