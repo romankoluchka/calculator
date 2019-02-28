@@ -29,7 +29,12 @@ keys.addEventListener('click', e => {
 			calculator.dataset.operator = action
 		}
 		if (action === 'decimal') {
-			display.textContent = displayedNum + keyContent
+			if (!displayedNum.includes('.')) {
+				display.textContent = displayedNum + '.'
+			} else if (previousKeyType === 'operator') {
+				display.textContent = '0.'
+			}
+			calculator.dataset.previousKeyType = 'decimal'
 		}
 		if (action === 'clear') {
 
