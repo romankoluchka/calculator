@@ -64,7 +64,9 @@ keys.addEventListener('click', e => {
 
 		}
 		if (action === 'calculate') {
-			display.textContent = calculate(firstValue, operator, secondValue)
+			if (firstValue) {
+				display.textContent = calculate(firstValue, operator, secondValue)
+			}
 			calculator.dataset.previousKeyType = 'calculate'
 		}
 	}
