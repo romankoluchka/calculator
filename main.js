@@ -1,7 +1,6 @@
 const calculator = document.querySelector('.calculator');
 const keys = document.querySelector('.calculator__keys');
 const display = document.querySelector('.calculator__display');
-const previousKeyType = calculator.dataset.previousKeyType
 
 keys.addEventListener('click', e => {
 	if (e.target.matches('button')) {
@@ -9,6 +8,8 @@ keys.addEventListener('click', e => {
 		const action = key.dataset.action;
 		const keyContent = key.textContent;
 		const displayedNum = display.textContent;
+		const previousKeyType = calculator.dataset.previousKeyType
+
 		Array.from(key.parentNode.children)
 			.forEach(k => k.classList.remove('is-depressed'))
 		if (!action) {
