@@ -12,6 +12,7 @@ keys.addEventListener('click', e => {
 		const firstValue = calculator.dataset.firstValue
 		const operator = calculator.dataset.operator
 		const secondValue = displayedNum
+		const clearButton = calculator.querySelector('[data-action=clear]')
 		const calculate = (n1, operator, n2) => {
 			let result = ''
 			if (operator === 'add') {
@@ -60,8 +61,18 @@ keys.addEventListener('click', e => {
 			calculator.dataset.previousKeyType = 'decimal'
 		}
 		if (action === 'clear') {
+			if (clearButton.textContent === 'AC') {
+				calculator.dataset.previousKeyType = ''
+				calculator.dataset.firstValue = ''
+				calculator.dataset.operator = ''
+				calculator.dataset.modValue = ''
+			}
+			display.textContent = '0'
+			clearButton.textContent = 'AC'
 			calculator.dataset.previousKeyType = 'clear'
-
+		}
+		if (action !== 'clear') {
+			clearButton.textContent = 'CE'
 		}
 		if (action === 'calculate') {
 			let firstValue = calculator.dataset.firstValue
