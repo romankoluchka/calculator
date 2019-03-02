@@ -29,7 +29,7 @@ keys.addEventListener('click', e => {
 		Array.from(key.parentNode.children)
 			.forEach(k => k.classList.remove('is-depressed'))
 		if (!action) {
-			if (displayedNum === '0' || previousKeyType === 'operator') {
+			if (displayedNum === '0' || previousKeyType === 'operator' || previousKeyType === 'calculate') {
 				display.textContent = keyContent
 			} else {
 				display.textContent = displayedNum + keyContent
@@ -40,7 +40,7 @@ keys.addEventListener('click', e => {
 			action === 'subtract' ||
 			action === 'multiply' ||
 			action === 'divide') {
-			if (firstValue && operator && previousKeyType !== 'operator') {
+			if (firstValue && operator && previousKeyType !== 'operator' && previousKeyType !== 'calculate') {
 				const calcValue = calculate(firstValue, operator, secondValue)
 				display.textContent = calcValue
 				calculator.dataset.firstValue = calcValue
@@ -52,9 +52,9 @@ keys.addEventListener('click', e => {
 			calculator.dataset.operator = action
 		}
 		if (action === 'decimal') {
-			if (!displayedNum.includes('.')) {
+			if (!displayedNum.includes('.') && previousKeyType !== 'operator' && previousKeyType !== 'calculate') {
 				display.textContent = displayedNum + '.'
-			} else if (previousKeyType === 'operator') {
+			} else {
 				display.textContent = '0.'
 			}
 			calculator.dataset.previousKeyType = 'decimal'
