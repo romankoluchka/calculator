@@ -60,13 +60,26 @@ const createResultString = (key, displayedNum, state) => {
 
 	if (keyType === 'clear') return 0
 
-
+	if (keyType === 'calculate') {
+		let firstValue = calculator.dataset.firstValue
+		let secondValue = displayedNum
+		if (firstValue) {
+			if (previousKeyType === 'calculate') {
+				firstValue = displayedNum
+				secondValue = calculator.dataset.modValue
+			}
+			return calculate(firstValue, operator, secondValue)
+		} else {
+			return displayedNum
+		}
+	}
 }
 
 const updateCalculatorState = (key, calculator, calculatedValue, displayedNum) => {
 	const keyType = getKeyType(key)
 	calculator.dataset.previousKeyType = keyType
 	const firstValue = calculator.dataset.firstValue
+	const previousKeyType = calculator.dataset.previousKeyType
 
 	Array.from(key.parentNode.children).forEach(k => k.classList.remove('is-depressed'))
 
@@ -94,9 +107,16 @@ const updateCalculatorState = (key, calculator, calculatedValue, displayedNum) =
 		key.textContent = 'AC'
 		calculator.dataset.previousKeyType = 'clear'
 	}
+
 	if (keyType !== 'clear') {
 		const clearButton = calculator.querySelector('[data-action=clear]')
 		clearButton.textContent = 'CE'
+	}
+
+	if (keyType === 'calculate') {
+		calculator.dataset.modValue = firstValue && previousKeyType === 'calculate'
+			? modValue
+			: displayedNum
 	}
 }
 
