@@ -1,7 +1,3 @@
-const calculator = document.querySelector('.calculator');
-const keys = document.querySelector('.calculator__keys');
-const display = document.querySelector('.calculator__display');
-
 const calculate = (n1, operator, n2) => {
 	const firstNum = parseFloat(n1)
 	const secondNum = parseFloat(n2)
@@ -14,11 +10,13 @@ const calculate = (n1, operator, n2) => {
 const getKeyType = key => {
 	const { action } = key.dataset
 	if (!action) return 'number'
-	if (action === 'add' ||
+	if (
+		action === 'add' ||
 		action === 'subtract' ||
 		action === 'multiply' ||
-		action === 'divide')
-		return 'operator'
+		action === 'divide'
+	) return 'operator'
+	// For everything else, return the action
 	return action
 }
 
@@ -41,10 +39,8 @@ const createResultString = (key, displayedNum, state) => {
 	}
 
 	if (keyType === 'decimal') {
-		if (!displayedNum.includes('.') && previousKeyType !== 'operator' && previousKeyType !== 'calculate')
-			return displayedNum + '.'
-		if (previousKeyType === 'operator' || previousKeyType === 'calculate')
-			return '0.'
+		if (!displayedNum.includes('.')) return displayedNum + '.'
+		if (previousKeyType === 'operator' || previousKeyType === 'calculate') return '0.'
 		return displayedNum
 	}
 
@@ -79,33 +75,27 @@ const updateCalculatorState = (key, calculator, calculatedValue, displayedNum) =
 
 	calculator.dataset.previousKeyType = keyType
 
-	if ((keyType === 'number' || keyType === 'decimal') && previousKeyType === 'calculate') {
-		calculator.dataset.firstValue = ''
-		calculator.dataset.modValue = ''
-	}
-
 	if (keyType === 'operator') {
 		calculator.dataset.operator = key.dataset.action
-		calculator.dataset.firstValue =
-			firstValue &&
-				operator &&
-				previousKeyType !== 'operator' &&
-				previousKeyType !== 'calculate'
-				? calculatedValue
-				: displayedNum
-	}
-
-	if (keyType === 'clear' & key.textContent === 'AC') {
-		calculator.dataset.previousKeyType = ''
-		calculator.dataset.firstValue = ''
-		calculator.dataset.operator = ''
-		calculator.dataset.modValue = ''
+		calculator.dataset.firstValue = firstValue &&
+			operator &&
+			previousKeyType !== 'operator' &&
+			previousKeyType !== 'calculate'
+			? calculatedValue
+			: displayedNum
 	}
 
 	if (keyType === 'calculate') {
 		calculator.dataset.modValue = firstValue && previousKeyType === 'calculate'
 			? modValue
 			: displayedNum
+	}
+
+	if (keyType === 'clear' && key.textContent === 'AC') {
+		calculator.dataset.firstValue = ''
+		calculator.dataset.modValue = ''
+		calculator.dataset.operator = ''
+		calculator.dataset.previousKeyType = ''
 	}
 }
 
@@ -121,14 +111,17 @@ const updateVisualState = (key, calculator) => {
 	}
 }
 
-keys.addEventListener('click', e => {
-	if (e.target.matches('button')) {
-		const key = e.target;
-		const displayedNum = display.textContent;
-		const resultString = createResultString(key, displayedNum, calculator.dataset)
+const calculator = document.querySelector('.calculator')
+const display = calculator.querySelector('.calculator__display')
+const keys = calculator.querySelector('.calculator__keys')
 
-		display.textContent = resultString
-		updateCalculatorState(key, calculator, resultString, displayedNum)
-		updateVisualState(key, calculator)
-	}
+keys.addEventListener('click', e => {
+	if (!e.target.matches('button')) return
+	const key = e.target
+	const displayedNum = display.textContent
+	const resultString = createResultString(key, displayedNum, calculator.dataset)
+
+	display.textContent = resultString
+	updateCalculatorState(key, calculator, resultString, displayedNum)
+	updateVisualState(key, calculator)
 })
