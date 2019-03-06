@@ -57,6 +57,10 @@ const createResultString = (key, displayedNum, state) => {
 			return displayedNum
 		}
 	}
+
+	if (keyType === 'clear') return 0
+
+
 }
 
 const updateCalculatorState = (key, calculator, calculatedValue, displayedNum) => {
@@ -80,14 +84,26 @@ const updateCalculatorState = (key, calculator, calculatedValue, displayedNum) =
 		}
 	}
 
+	if (keyType === 'clear') {
+		if (key.textContent === 'AC') {
+			calculator.dataset.previousKeyType = ''
+			calculator.dataset.firstValue = ''
+			calculator.dataset.operator = ''
+			calculator.dataset.modValue = ''
+		}
+		key.textContent = 'AC'
+		calculator.dataset.previousKeyType = 'clear'
+	}
+	if (keyType !== 'clear') {
+		const clearButton = calculator.querySelector('[data-action=clear]')
+		clearButton.textContent = 'CE'
+	}
 }
 
 keys.addEventListener('click', e => {
 	if (e.target.matches('button')) {
 		const key = e.target;
 		const displayedNum = display.textContent;
-		const clearButton = calculator.querySelector('[data-action=clear]')
-
 
 		const resultString = createResultString(e.target, displayedNum, calculator.dataset)
 		display.textContent = resultString
